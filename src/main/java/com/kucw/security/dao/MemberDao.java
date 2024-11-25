@@ -13,4 +13,6 @@ public interface MemberDao {
     Integer createMember(Member member);
 
     List<Role> getRolesByMemberId(Integer memberId);
+
+    void addRoleForMemberId(Integer memberId, Role normalRole);
 }

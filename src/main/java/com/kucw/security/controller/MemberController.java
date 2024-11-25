@@ -1,7 +1,9 @@
 package com.kucw.security.controller;
 
 import com.kucw.security.dao.MemberDao;
+import com.kucw.security.dao.RoleDao;
 import com.kucw.security.model.Member;
+import com.kucw.security.model.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,6 +22,9 @@ public class MemberController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private RoleDao roleDao;
+
     @PostMapping("/register")
     public String register(@RequestBody Member member) {
         // 省略參數檢查 (ex: email 是否被註冊過)
@@ -29,6 +34,10 @@ public class MemberController {
 
         // 在資料庫中插入 Member 數據
         Integer memberId = memberDao.createMember(member);
+
+        // 為 Member 添加預設的 Role
+        Role normalRole = roleDao.getRoleByName("ROLE_NORMAL_MEMBER");
+        memberDao.addRoleForMemberId(memberId, normalRole);
 
         return "註冊成功";
     }
