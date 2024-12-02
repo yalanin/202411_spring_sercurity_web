@@ -15,4 +15,6 @@ public interface MemberDao {
     List<Role> getRolesByMemberId(Integer memberId);
 
     void addRoleForMemberId(Integer memberId, Role normalRole);
+
+    void removeRoleFromMemberId(Integer memberId, Role role);
 }
