@@ -10,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -28,6 +29,10 @@ public class MySecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .csrf(csrf -> csrf.disable())
 
+                // 添加客製化的 Filter
+                .addFilterBefore(new MyFilter(), BasicAuthenticationFilter.class)
+
+                // 設定 Http Basic 認證和表單認證
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(Customizer.withDefaults())
 
