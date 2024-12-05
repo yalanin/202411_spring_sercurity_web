@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -45,7 +46,8 @@ class MemberControllerTest {
         // 測試是否能夠使用這個帳號成功登入
         RequestBuilder loginRequestBuilder = MockMvcRequestBuilders
                 .post("/userLogin")
-                .with(httpBasic("test1@gmail.com", "111"));
+                .with(httpBasic("test1@gmail.com", "111"))
+                .with(csrf());
 
         mockMvc.perform(loginRequestBuilder)
                 .andExpect(status().is(200));
@@ -53,7 +55,8 @@ class MemberControllerTest {
         // 新帳號可以觀看免費電影
         RequestBuilder freeRequestBuilder = MockMvcRequestBuilders
                 .post("/watchFreeMovie")
-                .with(httpBasic("test1@gmail.com", "111"));
+                .with(httpBasic("test1@gmail.com", "111"))
+                .with(csrf());
 
         mockMvc.perform(freeRequestBuilder)
                 .andExpect(status().is(200));

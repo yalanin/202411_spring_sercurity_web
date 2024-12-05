@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -37,7 +38,8 @@ class SubscriptionControllerTest {
                 .post("/subscribe")
                 .header("Content-Type", "application/json")
                 .content(json)
-                .with(httpBasic("normal@gmail.com", "normal"));
+                .with(httpBasic("normal@gmail.com", "normal"))
+                .with(csrf());
 
         mockMvc.perform(requestBuilder)
                 .andExpect(status().is(200));
@@ -46,7 +48,8 @@ class SubscriptionControllerTest {
         // 訂閱成功後可以觀看 vip movie
         RequestBuilder vipRequestBuilder = MockMvcRequestBuilders
                 .post("/watchVipMovie")
-                .with(httpBasic("normal@gmail.com", "normal"));
+                .with(httpBasic("normal@gmail.com", "normal"))
+                .with(csrf());
 
         mockMvc.perform(vipRequestBuilder)
                 .andExpect(status().is(200));
@@ -64,7 +67,8 @@ class SubscriptionControllerTest {
                 .post("/unsubscribe")
                 .header("Content-Type", "application/json")
                 .content(json)
-                .with(httpBasic("vip@gmail.com", "vip"));
+                .with(httpBasic("vip@gmail.com", "vip"))
+                .with(csrf());
 
         mockMvc.perform(requestBuilder)
                 .andExpect(status().is(200));
@@ -73,7 +77,8 @@ class SubscriptionControllerTest {
         // 取消訂閱後無法觀看 vip movie
         RequestBuilder vipRequestBuilder = MockMvcRequestBuilders
                 .post("/watchVipMovie")
-                .with(httpBasic("vip@gmail.com", "vip"));
+                .with(httpBasic("vip@gmail.com", "vip"))
+                .with(csrf());
 
         mockMvc.perform(vipRequestBuilder)
                 .andExpect(status().is(403));
